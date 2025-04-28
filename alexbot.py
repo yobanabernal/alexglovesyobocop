@@ -21,7 +21,7 @@ CHANNEL_ID = 1364814276287791166
 
 # --- Image Lists ---
 victory_images = [
-    "https://i.imgur.com/E3K6diu.png",
+    "https://i.imgur.com/E3K6diu.png", "https://i.imgur.com/0nlWVAz.png",
     "https://i.imgur.com/8IK05Gj.gif", "https://i.imgur.com/st6CKzA.gif",
     "https://i.imgur.com/nNuvTIy.gif", "https://i.imgur.com/HNBLKT2.gif",
     "https://i.imgur.com/TubCg5S.gif", "https://i.imgur.com/afmRSoq.gif",
@@ -32,8 +32,7 @@ loss_images = [
     "https://i.imgur.com/TWkICaS.png", "https://i.imgur.com/KA7Vb0f.png",
     "https://i.imgur.com/VZeKY49.gif", "https://i.imgur.com/EwSka7o.gif",
     "https://i.imgur.com/6d0UUg7.gif", "https://i.imgur.com/zJYKUlL.gif",
-    "https://i.imgur.com/FBn7die.gif", "https://i.imgur.com/P4kemwD.gif",
-    "https://i.imgur.com/0nlWVAz.png"
+    "https://i.imgur.com/FBn7die.gif", "https://i.imgur.com/P4kemwD.gif"
 ]
 
 pentakill_images = [
@@ -55,7 +54,6 @@ first_blood_images = [
     "https://i.imgur.com/f8BWcfb.gif", "https://i.imgur.com/V9B6Oi4.gif"
 ]
 
-# --- Other Messages ---
 league_victory_messages = [
     "Nexus Destroyed! ⚔️", "Victory Royale! 🎮", "Enemy team FFed at 15! 🏆", "Another LP secured! 🧡"
 ]
@@ -82,6 +80,7 @@ already_checked_matches = set()
 win_counter = 0
 last_match_time = datetime.datetime.utcnow()
 last_goodnight_sent = None
+last_celebrated_match_id = None
 
 # --- Helper Functions ---
 async def send_embed(image_url, title, color=0x00ff00):
@@ -101,6 +100,16 @@ async def send_message(text):
     if channel:
         await channel.send(text)
 
+def save_last_match_id(match_id):
+    with open("last_match.txt", "w") as f:
+        f.write(match_id)
+
+def load_last_match_id():
+    if os.path.exists("last_match.txt"):
+        with open("last_match.txt", "r") as f:
+            return f.read().strip()
+    return None
+
 # --- Riot API ---
 def get_recent_match_ids(puuid, count=1):
     url = f"https://{PLATFORM_ROUTING}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?count={count}"
@@ -117,23 +126,25 @@ def get_match_details(match_id):
 # --- Core Logic ---
 @tasks.loop(minutes=4)
 async def game_check():
-    global win_counter, last_match_time, last_goodnight_sent
+    global win_counter, last_match_time, last_goodnight_sent, last_celebrated_match_id
 
+    await asyncio.sleep(10)
     match_ids = get_recent_match_ids(PUUID, count=1)
     if not match_ids:
         return
     latest_match_id = match_ids[0]
 
-    if latest_match_id in already_checked_matches:
+    if latest_match_id == last_celebrated_match_id:
         return
 
     match_data = get_match_details(latest_match_id)
     if not match_data:
         return
 
-    already_checked_matches.add(latest_match_id)
     last_match_time = datetime.datetime.utcnow()
     last_goodnight_sent = None
+    last_celebrated_match_id = latest_match_id
+    save_last_match_id(latest_match_id)
 
     participant = next((p for p in match_data['info']['participants'] if p['puuid'] == PUUID), None)
     if not participant:
@@ -184,7 +195,9 @@ async def daily_love_note():
 # --- Events ---
 @client.event
 async def on_ready():
+    global last_celebrated_match_id
     print(f"✅ Logged in as {client.user}")
+    last_celebrated_match_id = load_last_match_id()
     await send_message("🧡 Alexbot is online and ready to support Alex and YB! 🎀")
     game_check.start()
     inactivity_check.start()
@@ -192,5 +205,4 @@ async def on_ready():
 
 # --- Run Bot ---
 client.run(os.getenv("DISCORD_TOKEN"))
-
 
