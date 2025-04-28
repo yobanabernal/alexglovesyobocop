@@ -81,6 +81,12 @@ win_counter = 0
 last_match_time = datetime.datetime.utcnow()
 last_goodnight_sent = None
 last_celebrated_match_id = None
+# --- Global Variables ---
+already_checked_matches = set()
+win_counter = 0
+last_match_time = datetime.datetime.utcnow()
+last_goodnight_sent = None
+last_celebrated_match_id = None
 ]
 
 # --- Global Variables ---
