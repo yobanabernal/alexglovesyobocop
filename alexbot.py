@@ -227,4 +227,5 @@ async def on_ready():
 
 # --- Run the Bot ---
 import os
-client.run(os.getenv("MTM2NDgxNTc1OTE5NjI5MTA5Mg.GB-Jbb.QffhUXiDiTRNHQB1d-m1ZPH8LBTGisaGCimD6M"))
+client.run(os.getenv("DISCORD_TOKEN"))
+
