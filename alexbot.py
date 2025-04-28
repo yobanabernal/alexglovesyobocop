@@ -226,5 +226,5 @@ async def on_ready():
     daily_love_note.start()
 
 # --- Run the Bot ---
-
-client.run("MTM2NDgxNTc1OTE5NjI5MTA5Mg.GB-Jbb.QffhUXiDiTRNHQB1d-m1ZPH8LBTGisaGCimD6M") 
+import os
+client.run(os.getenv("MTM2NDgxNTc1OTE5NjI5MTA5Mg.GB-Jbb.QffhUXiDiTRNHQB1d-m1ZPH8LBTGisaGCimD6M"))
