@@ -25,11 +25,11 @@ victory_images = [
     "https://i.imgur.com/8IK05Gj.gif", "https://i.imgur.com/st6CKzA.gif",
     "https://i.imgur.com/nNuvTIy.gif", "https://i.imgur.com/HNBLKT2.gif",
     "https://i.imgur.com/TubCg5S.gif", "https://i.imgur.com/afmRSoq.gif",
-    "https://i.imgur.com/rnWqVMv.gif"
+    "https://i.imgur.com/rnWqVMv.gif", "https://i.imgur.com/KA7Vb0f.png"
 ]
 
 loss_images = [
-    "https://i.imgur.com/TWkICaS.png", "https://i.imgur.com/KA7Vb0f.png",
+    "https://i.imgur.com/TWkICaS.png",
     "https://i.imgur.com/VZeKY49.gif", "https://i.imgur.com/EwSka7o.gif",
     "https://i.imgur.com/6d0UUg7.gif", "https://i.imgur.com/zJYKUlL.gif",
     "https://i.imgur.com/FBn7die.gif", "https://i.imgur.com/P4kemwD.gif"
