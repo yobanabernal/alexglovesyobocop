@@ -21,37 +21,37 @@ CHANNEL_ID = 1364814276287791166
 
 # --- Image Lists ---
 victory_images = [
-    "https://i.imgur.com/E3K6diu.png", "https://i.imgur.com/0nlWVAz.png",
+    "https://i.imgur.com/TWkICaS.gif", "https://i.imgur.com/KA7Vb0f.gif",
     "https://i.imgur.com/8IK05Gj.gif", "https://i.imgur.com/st6CKzA.gif",
-    "https://i.imgur.com/nNuvTIy.gif", "https://i.imgur.com/HNBLKT2.gif",
-    "https://i.imgur.com/TubCg5S.gif", "https://i.imgur.com/afmRSoq.gif",
-    "https://i.imgur.com/rnWqVMv.gif", "https://i.imgur.com/KA7Vb0f.png"
+    "https://i.imgur.com/nNuvTIy.gif", "https://i.imgur.com/PwYURFA.gif",
+    "https://i.imgur.com/HNBLKT2.gif", "https://i.imgur.com/afmRSoq.gif",
+    "https://i.imgur.com/rnWqVMv.gif"
 ]
 
 loss_images = [
-    "https://i.imgur.com/TWkICaS.png",
+    "https://i.imgur.com/E3K6diu.gif", "https://i.imgur.com/0nlWVAz.gif",
     "https://i.imgur.com/VZeKY49.gif", "https://i.imgur.com/EwSka7o.gif",
-    "https://i.imgur.com/6d0UUg7.gif", "https://i.imgur.com/zJYKUlL.gif",
-    "https://i.imgur.com/FBn7die.gif", "https://i.imgur.com/P4kemwD.gif"
+    "https://i.imgur.com/6d0UUg7.gif", "https://i.imgur.com/FBn7die.gif",
+    "https://i.imgur.com/zJYKUlL.gif", "https://i.imgur.com/P4kemwD.gif"
 ]
 
 pentakill_images = [
-    "https://i.imgur.com/MNTVx0q.gif", "https://i.imgur.com/qZieswl.gif",
-    "https://i.imgur.com/lPwu7Cz.gif", "https://i.imgur.com/7NcBkyF.gif",
+    "https://i.imgur.com/MNTVx0q.gif", "https://i.imgur.com/lPwu7Cz.gif",
+    "https://i.imgur.com/qZieswl.gif", "https://i.imgur.com/7NcBkyF.gif",
     "https://i.imgur.com/fTQKS1l.gif"
 ]
 
 mvp_images = [
-    "https://i.imgur.com/QG8Gutu.png", "https://i.imgur.com/JbNIU35.jpeg",
-    "https://i.imgur.com/r0qup5U.jpeg", "https://i.imgur.com/pLOvgF3.jpeg",
-    "https://i.imgur.com/rCH1CQ6.jpeg", "https://i.imgur.com/5kv113R.jpeg",
+    "https://i.imgur.com/QG8Gutu.jpeg", "https://i.imgur.com/JbNIU35.jpeg",
+    "https://i.imgur.com/rCH1CQ6.jpeg", "https://i.imgur.com/pLOvgF3.jpeg",
+    "https://i.imgur.com/r0qup5U.jpeg", "https://i.imgur.com/5kv113R.jpeg",
     "https://i.imgur.com/6gWg3wg.jpeg"
 ]
 
 first_blood_images = [
-    "https://i.imgur.com/D1GXeOI.png", "https://i.imgur.com/f5GD2Eg.gif",
-    "https://i.imgur.com/A28iUEG.gif", "https://i.imgur.com/oYPqFxB.gif",
-    "https://i.imgur.com/f8BWcfb.gif", "https://i.imgur.com/V9B6Oi4.gif"
+    "https://i.imgur.com/D1GXeOI.gif", "https://i.imgur.com/f5GD2Eg.gif",
+    "https://i.imgur.com/A28iUEG.gif", "https://i.imgur.com/f8BWcfb.gif",
+    "https://i.imgur.com/V9B6Oi4.gif"
 ]
 
 league_victory_messages = [
@@ -73,6 +73,14 @@ goodnight_messages = [
     "🌙 Dream big like a Kardashian, Alex! 💎🛌",
     "🌙 Lettuce hope you sleep well, burger king! 🥬🍔",
     "🌙 Good night! Hope your ELO dreams are as high as Challenger! 🏆"
+]
+
+# --- Global Variables ---
+already_checked_matches = set()
+win_counter = 0
+last_match_time = datetime.datetime.utcnow()
+last_goodnight_sent = None
+last_celebrated_match_id = None
 ]
 
 # --- Global Variables ---
