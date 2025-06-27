@@ -1,100 +1,10 @@
-import requests
-import random
-import discord
-from discord.ext import commands, tasks
-import datetime
-import asyncio
-import os
-
-# --- Riot API Info ---
-RIOT_API_KEY = "RGAPI-c7f0282c-96cd-4fc3-a065-db2ea8f97a5d"
-PUUID = "pQP5alDcqtoLkUqghskgYDMxQ3Rwl62JCjI3TyqgDQpzIB_TpIpVyLcm4u_GnWLTEGhZLQgvIL5Nuw"
-PLATFORM_ROUTING = "americas"
-
-# --- Discord Bot Setup ---
-intents = discord.Intents.default()
-intents.message_content = True
-client = commands.Bot(command_prefix="!", intents=intents)
-
-# --- Channel ID ---
-CHANNEL_ID = 1364814276287791166
-
-# --- Image Lists ---
-victory_images = [
-    "https://i.imgur.com/TWkICaS.gif", "https://i.imgur.com/KA7Vb0f.gif",
-    "https://i.imgur.com/8IK05Gj.gif", "https://i.imgur.com/st6CKzA.gif",
-    "https://i.imgur.com/nNuvTIy.gif", "https://i.imgur.com/PwYURFA.gif",
-    "https://i.imgur.com/HNBLKT2.gif", "https://i.imgur.com/afmRSoq.gif",
-    "https://i.imgur.com/rnWqVMv.gif"
-]
-
-loss_images = [
-    "https://i.imgur.com/E3K6diu.gif", "https://i.imgur.com/0nlWVAz.gif",
-    "https://i.imgur.com/VZeKY49.gif", "https://i.imgur.com/EwSka7o.gif",
-    "https://i.imgur.com/6d0UUg7.gif", "https://i.imgur.com/FBn7die.gif",
-    "https://i.imgur.com/zJYKUlL.gif", "https://i.imgur.com/P4kemwD.gif"
-]
-
-pentakill_images = [
-    "https://i.imgur.com/MNTVx0q.gif", "https://i.imgur.com/lPwu7Cz.gif",
-    "https://i.imgur.com/qZieswl.gif", "https://i.imgur.com/7NcBkyF.gif",
-    "https://i.imgur.com/fTQKS1l.gif"
-]
-
-mvp_images = [
-    "https://i.imgur.com/QG8Gutu.jpeg", "https://i.imgur.com/JbNIU35.jpeg",
-    "https://i.imgur.com/rCH1CQ6.jpeg", "https://i.imgur.com/pLOvgF3.jpeg",
-    "https://i.imgur.com/r0qup5U.jpeg", "https://i.imgur.com/5kv113R.jpeg",
-    "https://i.imgur.com/6gWg3wg.jpeg"
-]
-
-first_blood_images = [
-    "https://i.imgur.com/D1GXeOI.gif", "https://i.imgur.com/f5GD2Eg.gif",
-    "https://i.imgur.com/A28iUEG.gif", "https://i.imgur.com/f8BWcfb.gif",
-    "https://i.imgur.com/V9B6Oi4.gif"
-]
-
-league_victory_messages = [
-    "Nexus Destroyed! ⚔️", "Victory Royale! 🎮", "Enemy team FFed at 15! 🏆", "Another LP secured! 🧡"
-]
-
-love_notes = [
-    "🧡 YB loves you more than all the stars, Alex!",
-    "💖 You're YB's favorite champion and favorite person!",
-    "🎀 No matter the match, you're always winning my heart.",
-    "🌟 Wishing you the sweetest dreams and biggest victories, Alex!",
-    "🏆 YB is always your #1 fan, no matter what!"
-]
-
-goodnight_messages = [
-    "🌙 Time to log off, builder Alex. Sweet dreams of diamonds and creepers! 🧱✨",
-    "🌙 Good night King Alex, may your dreams be filled with whoppers! 🍔👑",
-    "🌙 Good night Summoner! Zero feeders, only sweet dreams! 🎮✨",
-    "🌙 Dream big like a Kardashian, Alex! 💎🛌",
-    "🌙 Lettuce hope you sleep well, burger king! 🥬🍔",
-    "🌙 Good night! Hope your ELO dreams are as high as Challenger! 🏆"
-]
-
 # --- Global Variables ---
 already_checked_matches = set()
 win_counter = 0
 last_match_time = datetime.datetime.utcnow()
 last_goodnight_sent = None
 last_celebrated_match_id = None
-# --- Global Variables ---
-already_checked_matches = set()
-win_counter = 0
-last_match_time = datetime.datetime.utcnow()
-last_goodnight_sent = None
-last_celebrated_match_id = None
-
-
-# --- Global Variables ---
-already_checked_matches = set()
-win_counter = 0
-last_match_time = datetime.datetime.utcnow()
-last_goodnight_sent = None
-last_celebrated_match_id = None
+last_love_note_sent = None  # Added for fix #3
 
 # --- Helper Functions ---
 async def send_embed(image_url, title, color=0x00ff00):
@@ -129,12 +39,16 @@ def get_recent_match_ids(puuid, count=1):
     url = f"https://{PLATFORM_ROUTING}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?count={count}"
     headers = {"X-Riot-Token": RIOT_API_KEY}
     response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        print(f"⚠️ Riot API Error {response.status_code}: {response.text}")
     return response.json() if response.status_code == 200 else []
 
 def get_match_details(match_id):
     url = f"https://{PLATFORM_ROUTING}.api.riotgames.com/lol/match/v5/matches/{match_id}"
     headers = {"X-Riot-Token": RIOT_API_KEY}
     response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        print(f"⚠️ Riot API Error {response.status_code}: {response.text}")
     return response.json() if response.status_code == 200 else None
 
 # --- Core Logic ---
@@ -200,11 +114,14 @@ async def inactivity_check():
 
 @tasks.loop(minutes=1)
 async def daily_love_note():
-    now = datetime.datetime.now()
-    if now.hour == 23 and now.minute == 11:
-        await send_message(random.choice(love_notes))
-        await asyncio.sleep(300)
-        await send_message("🌙 Good night Alex! Sweet dreams from YB! 💖✨")
+    global last_love_note_sent
+    now = datetime.datetime.utcnow()
+    if now.hour == 6 and now.minute == 11:  # 6:11 UTC ≈ 11:11 EST
+        if not last_love_note_sent or (now - last_love_note_sent).total_seconds() > 3600:
+            await send_message(random.choice(love_notes))
+            await asyncio.sleep(2)
+            await send_message("🌙 Good night Alex! Sweet dreams from YB! 💖✨")
+            last_love_note_sent = now
 
 # --- Events ---
 @client.event
